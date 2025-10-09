@@ -757,7 +757,7 @@
                 <!-- Шаг 1: Ввод первой команды -->
                 <div class="input-step active" id="step1">
                     <h3 class="step-title">Введите первую команду</h3>
-                    <input type="text" class="team-input" id="team1-input" placeholder="Например, Реал Мадрид">
+                    <input type="text" class="team-input" id="team1-input" placeholder="Например, Спартак Москва">
                     <p class="input-hint">Вводите полное название команды</p>
                     <p class="error-message" id="error1">Введите полное название команды</p>
                     <button class="next-button" id="next1">Далее</button>
@@ -766,7 +766,7 @@
                 <!-- Шаг 2: Ввод второй команды -->
                 <div class="input-step" id="step2">
                     <h3 class="step-title">Введите вторую команду</h3>
-                    <input type="text" class="team-input" id="team2-input" placeholder="Например, Барселона">
+                    <input type="text" class="team-input" id="team2-input" placeholder="Например, Динамо Москва">
                     <p class="input-hint">Вводите полное название команды</p>
                     <p class="error-message" id="error2">Введите полное название команды</p>
                     <button class="next-button" id="next2">Далее</button>
@@ -891,7 +891,7 @@
                     <ul>
                         <li>Используйте полные названия команд</li>
                         <li>Загружайте четкие скриншоты</li>
-                        <li>Неограниченное количество прогнозов</li>
+                        <li>Неограниченное количество попыток</li>
                         <li>При проблемах — обновите страницу</li>
                     </ul>
                 </div>
@@ -988,21 +988,74 @@
             let team1 = '';
             let team2 = '';
             
-            // База данных футбольных команд
+            // База данных футбольных команд с российскими командами
             const footballTeams = [
+                // Российские команды
+                'Спартак Москва', 'Спартак', 'Динамо Москва', 'Динамо', 'ЦСКА Москва', 'ЦСКА',
+                'Зенит Санкт-Петербург', 'Зенит', 'Локомотив Москва', 'Локомотив', 
+                'Краснодар', 'Ростов', 'Ахмат Грозный', 'Ахмат', 'Крылья Советов Самара', 'Крылья Советов',
+                'Факел Воронеж', 'Факел', 'Урал Екатеринбург', 'Урал', 'Сочи', 'Оренбург',
+                'Пари Нижний Новгород', 'Балтика Калининград', 'Балтика', 'Рубин Казань', 'Рубин',
+                'Торпедо Москва', 'Алания Владикавказ', 'Алания', 'Анжи Махачкала', 'Анжи',
+                
+                // Англия
                 'Арсенал', 'Астон Вилла', 'Борнмут', 'Брайтон', 'Бернли', 'Брентфорд', 
                 'Вест Хэм', 'Вулверхэмптон', 'Кристал Пэлас', 'Ливерпуль', 'Лутон Таун', 
                 'Манчестер Сити', 'Манчестер Юнайтед', 'Ноттингем Форест', 'Ньюкасл', 
-                'Тоттенхэм', 'Фулхэм', 'Челси', 'Шеффилд Юнайтед', 'Эвертон', 'Барселона',
-                'Реал Мадрид', 'Атлетико Мадрид', 'Севилья', 'Валенсия', 'Вильярреал',
-                'Бавария', 'Боруссия Дортмунд', 'Байер Леверкузен', 'РБ Лейпциг', 'Ювентус',
-                'Милан', 'Интер', 'Наполи', 'Рома', 'Лацио', 'ПСЖ', 'Олимпик Лион', 'Монако'
+                'Тоттенхэм', 'Фулхэм', 'Челси', 'Шеффилд Юнайтед', 'Эвертон',
+                'Лестер Сити', 'Саутгемптон', 'Лидс Юнайтед', 'Норвич Сити', 'Уотфорд',
+                
+                // Испания
+                'Барселона', 'Реал Мадрид', 'Атлетико Мадрид', 'Севилья', 'Валенсия', 
+                'Вильярреал', 'Реал Бетис', 'Атлетик Бильбао', 'Реал Сосьедад', 'Осасуна',
+                
+                // Германия
+                'Бавария', 'Боруссия Дортмунд', 'Байер Леверкузен', 'РБ Лейпциг', 
+                'Боруссия Мёнхенгладбах', 'Айнтрахт Франкфурт', 'Вольфсбург', 'Хоффенхайм',
+                
+                // Италия
+                'Ювентус', 'Милан', 'Интер', 'Наполи', 'Рома', 'Лацио', 'Аталанта', 
+                'Фиорентина', 'Болонья', 'Сассуоло', 'Удинезе', 'Торино',
+                
+                // Франция
+                'ПСЖ', 'Олимпик Лион', 'Монако', 'Марсель', 'Лилль', 'Ренн',
+                'Ницца', 'Ланс', 'Нант', 'Страсбур', 'Монпелье', 'Реймс',
+                
+                // Португалия
+                'Бенфика', 'Порту', 'Спортинг', 'Брага', 'Витория Гимарайнш',
+                
+                // Нидерланды
+                'Аякс', 'ПСВ', 'Фейеноорд', 'АЗ Алкмар', 'Твенте', 'Утрехт',
+                
+                // Турция
+                'Галатасарай', 'Фенербахче', 'Бешикташ', 'Трабзонспор', 'Башакшехир',
+                
+                // Украина
+                'Шахтер Донецк', 'Динамо Киев', 'Днепр-1', 'Заря Луганск', 'Ворскла',
+                
+                // Беларусь
+                'БАТЭ', 'Динамо Минск', 'Шахтер Солигорск', 'Торпедо-БелАЗ', 'Неман',
+                
+                // Казахстан
+                'Астана', 'Кайрат', 'Тобол', 'Ордабасы', 'Шахтер Караганда',
+                
+                // Другие известные команды
+                'Селтик', 'Рейнджерс', 'Андерлехт', 'Брюгге', 'Олимпиакос', 'Панатинаикос',
+                'Црвена Звезда', 'Партизан', 'Динамо Загреб', 'Ференцварош', 'Легия',
+                'Спарта Прага', 'Славия Прага', 'Лудогорец', 'Бока Хуниорс', 'Ривер Плейт',
+                'Сан-Паулу', 'Коринтианс', 'Палмейрас', 'Фламенго', 'Америка', 'Гвадалахара',
+                'Ульсан Хёндэ', 'Аль-Хиляль', 'Аль-Ахли'
             ];
             
             // Инициализация
             function init() {
-                predictionsLeft.textContent = 'неограниченно';
                 setupEventListeners();
+                updateUI();
+            }
+            
+            // Обновление интерфейса
+            function updateUI() {
+                predictionsLeft.textContent = 'неограниченно';
             }
             
             // Настройка обработчиков событий
@@ -1012,13 +1065,8 @@
                     document.querySelector('#analyze').scrollIntoView({ behavior: 'smooth' });
                 });
                 
-                next1Button.addEventListener('click', function() {
-                    goToStep2();
-                });
-                
-                next2Button.addEventListener('click', function() {
-                    goToStep3();
-                });
+                next1Button.addEventListener('click', goToStep2);
+                next2Button.addEventListener('click', goToStep3);
                 
                 uploadArea.addEventListener('click', function() {
                     fileInput.click();
@@ -1031,13 +1079,9 @@
                 
                 fileInput.addEventListener('change', handleFileSelect);
                 
-                analyzeButton.addEventListener('click', function() {
-                    analyzePrediction();
-                });
+                analyzeButton.addEventListener('click', analyzePrediction);
                 
-                newSignalButton.addEventListener('click', function() {
-                    resetToStart();
-                });
+                newSignalButton.addEventListener('click', resetToStart);
                 
                 // Плавная прокрутка для навигации
                 document.querySelectorAll('nav a, .cta-button').forEach(anchor => {
@@ -1081,15 +1125,18 @@
                 if (isTeam2Valid && areTeamsDifferent) {
                     error2.style.display = 'none';
                     
-                    step2.classList.remove('active');
-                    step3.classList.add('active');
-                    currentStep = 3;
-                    
-                    // Обновляем названия команд
-                    homeTeam.textContent = team1;
-                    awayTeam.textContent = team2;
-                    homeLogo.textContent = getTeamAbbreviation(team1);
-                    awayLogo.textContent = getTeamAbbreviation(team2);
+                    // Используем setTimeout для предотвращения зависания
+                    setTimeout(() => {
+                        step2.classList.remove('active');
+                        step3.classList.add('active');
+                        currentStep = 3;
+                        
+                        // Обновляем названия команд
+                        homeTeam.textContent = team1;
+                        awayTeam.textContent = team2;
+                        homeLogo.textContent = getTeamAbbreviation(team1);
+                        awayLogo.textContent = getTeamAbbreviation(team2);
+                    }, 10);
                     
                 } else {
                     if (!areTeamsDifferent) {
@@ -1188,7 +1235,6 @@
                         resultsContainer.style.display = 'block';
                         generateNewPrediction();
                         newSignalButton.style.display = 'block';
-                        playSuccessSound();
                     }, 500);
                 }, 5000);
             }
@@ -1214,11 +1260,6 @@
                 
                 animateValue(accuracyValue, 0, accuracy, 1500);
                 bestSignalValue.textContent = reliableSignal.name;
-                
-                // Воспроизводим звук сигнала
-                setTimeout(() => {
-                    playSignalSound();
-                }, 1600);
                 
                 setTimeout(function() {
                     animateValue(totalOverValue, 0, totalOver, 1500);
@@ -1277,6 +1318,8 @@
                 step3.classList.remove('active');
                 step1.classList.add('active');
                 currentStep = 1;
+                
+                updateUI();
             }
             
             // Запуск приложения
